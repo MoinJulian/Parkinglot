@@ -1,0 +1,99 @@
+# Load environment variables from .env file
+LOAD environment variables
+
+# Retrieve MongoDB connection string from environment variables
+GET MongoDB connection string from environment variables
+
+# Initialize parking system with 14 days and 20 spaces per day
+# Each space stores: (visitor_name, car_license, is_accessible)
+INITIALIZE 2D array 'parking_spaces' with 14 days and 20 spaces per day, all set to None
+
+# Setup MongoDB connection
+CONNECT to MongoDB using the connection string
+SELECT the 'parking_system' database
+SELECT the 'parking_spaces' collection
+
+# Function to reset the parking system
+DEFINE reset_parking_system():
+    RESET 'parking_spaces' to 14 days and 20 empty spaces
+    PRINT "Parking system reset complete."
+    CALL save_parking_data()
+
+# Function to save parking data to MongoDB
+DEFINE save_parking_data():
+    CONVERT 'parking_spaces' to a list of dictionaries for MongoDB compatibility
+    UPSERT the parking data into the collection using a fixed document ID ('current_data')
+    PRINT "Parking data saved to MongoDB."
+
+# Function to load parking data from MongoDB
+DEFINE load_parking_data():
+    RETRIEVE 'current_data' document from MongoDB
+    IF no data found:
+        PRINT "No existing parking data found. Starting with an empty system."
+        CALL save_parking_data()
+    ELSE:
+        TRY:
+            CONVERT the data from MongoDB format to the 2D 'parking_spaces' array
+            PRINT "Parking data loaded from MongoDB."
+        EXCEPT error:
+            PRINT "Error decoding data from MongoDB. Starting with an empty system."
+
+# Function to book a parking space
+DEFINE book_parking_space():
+    LOOP:
+        ASK user for a day (1-14)
+        IF day is invalid:
+            PRINT "Invalid day"
+            CONTINUE loop
+        
+        ASK user if they need an accessible space
+        IF accessible space requested:
+            LOOP through accessible spaces (1-5):
+                IF space is available:
+                    ASK for visitor's name and car license
+                    ASSIGN parking space to the visitor
+                    PRINT the assigned parking space number
+                    BREAK loop
+            IF no accessible space found:
+                PRINT "No accessible spaces available"
+        ELSE:
+            LOOP through general spaces (6-20):
+                IF space is available:
+                    ASK for visitor's name and car license
+                    ASSIGN parking space to the visitor
+                    PRINT the assigned parking space number
+                    BREAK loop
+            
+            IF no general space found:
+                TRY to allocate accessible space (1-5) to the visitor
+                IF no space is available:
+                    PRINT "No spaces available"
+        
+        CALL save_parking_data()
+
+        ASK if the user wants to book another space
+        IF no, BREAK loop
+
+# Function to display parking statistics
+DEFINE display_statistics():
+    INITIALIZE counters for accessible and general spaces used
+    LOOP through each day:
+        CALCULATE the number of accessible and general spaces used for the day
+        PRINT daily statistics
+        UPDATE total accessible and general space usage
+    PRINT overall statistics for the 14-day period
+
+# Main function
+DEFINE main():
+    CALL load_parking_data()  # Load existing data from MongoDB
+    LOOP:
+        DISPLAY menu with options to book space, display statistics, reset system, or exit
+        GET user choice
+        IF choice is to book space, CALL book_parking_space()
+        IF choice is to display statistics, CALL display_statistics()
+        IF choice is to reset system, CALL reset_parking_system()
+        IF choice is to exit, BREAK loop
+        IF invalid choice, PRINT error message
+
+# Run the main program
+CALL main()
