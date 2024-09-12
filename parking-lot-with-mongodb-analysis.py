@@ -94,7 +94,7 @@ def book_parking_space():
                     if parking_spaces[day_requested][i] is None:
                         # Ask for visitor details
                         visitor_name = input("Enter your name: ")
-                        car_license = input("Enter your car license number: ")
+                        car_license = input("Enter your car license plate number: ")
                         
                         # Store visitor's details with the accessible flag
                         parking_spaces[day_requested][i] = (visitor_name, car_license, True)
@@ -113,7 +113,7 @@ def book_parking_space():
                     if parking_spaces[day_requested][i] is None:
                         # Ask for visitor details
                         visitor_name = input("Enter your name: ")
-                        car_license = input("Enter your car license number: ")
+                        car_license = input("Enter your car license plate number: ")
                         
                         # Store visitor's details without the accessible flag
                         parking_spaces[day_requested][i] = (visitor_name, car_license, False)
@@ -130,7 +130,7 @@ def book_parking_space():
                         if parking_spaces[day_requested][i] is None:
                             # Ask for visitor details
                             visitor_name = input("Enter your name: ")
-                            car_license = input("Enter your car license number: ")
+                            car_license = input("Enter your car license plate number: ")
                             
                             # Store visitor's details (even though it's an accessible spot, they don't need it)
                             parking_spaces[day_requested][i] = (visitor_name, car_license, False)
@@ -149,7 +149,7 @@ def book_parking_space():
             # Ask if visitor wants to book another space
             another_booking = input("Do you want to book another parking space? (yes/no): ").lower()
             if another_booking == 'no':
-                exit()
+                break
         
         except ValueError:
             print("Invalid input. Please enter a valid number.")
