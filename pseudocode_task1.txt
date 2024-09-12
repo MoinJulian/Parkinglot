@@ -1,0 +1,59 @@
+// Initialize data structures
+// 2D array: 20 parking spaces for 14 days
+parkingSpaces[14][20] = empty  // Stores name and car license number
+
+// Main loop for booking system
+WHILE true
+    // Input: Ask visitor to request a day for parking (1-14)
+    DISPLAY "Enter a day (1-14) for parking:"
+    dayRequested = INPUT
+    
+    // Check if dayRequested is valid (between 1 and 14)
+    IF dayRequested < 1 OR dayRequested > 14 THEN
+        DISPLAY "Invalid day! Please enter a number between 1 and 14."
+        CONTINUE  // Loop back to ask for valid day
+    ENDIF
+    
+    // Check for available parking spaces on the requested day
+    availableSpaceFound = FALSE
+    FOR each space IN parkingSpaces[dayRequested-1]  // dayRequested-1 for 0-based index
+        IF space is empty THEN
+            availableSpaceFound = TRUE
+            DISPLAY "Enter your name:"
+            visitorName = INPUT
+            DISPLAY "Enter your car license number:"
+            carLicense = INPUT
+            
+            // Store visitor's details in the first available parking space
+            space = [visitorName, carLicense]
+            
+            // Inform the visitor of their parking space number
+            spaceNumber = index of space + 1  // Convert to 1-based index
+            DISPLAY "Your parking space number is ", spaceNumber
+            
+            BREAK  // Exit loop after booking is done
+        ENDIF
+    ENDFOR
+    
+    // If no available space was found for the day
+    IF availableSpaceFound = FALSE THEN
+        DISPLAY "Sorry, no available spaces on this day."
+    ENDIF
+    
+    // Ask if visitor wants to book another space
+    DISPLAY "Do you want to book another parking space? (yes/no)"
+    response = INPUT
+    IF response = "no" THEN
+        BREAK  // Exit the main loop
+    ENDIF
+ENDWHILE
+
+// End of the two-week period - reset the parking system
+DISPLAY "Resetting parking system for the next two-week period."
+FOR day = 0 to 13
+    FOR space = 0 to 19
+        parkingSpaces[day][space] = empty  // Clear all data
+    ENDFOR
+ENDFOR
+
+DISPLAY "Parking system reset complete."
